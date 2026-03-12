@@ -1,12 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dinnerplan</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dinnerplan</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; font-family: -apple-system, 'Helvetica Neue', sans-serif; color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    const DS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+    const MEALS = [
+      {id:"spag-bol",name:"Spaghetti Bolognese",emoji:"🍝",cookTime:"35 min",category:"Pasta",ingredients:[
+        {id:"spaghetti",name:"Spaghetti",amount:80,unit:"g",cat:"Pantry"},
+        {id:"beef-mince",name:"Beef mince",amount:100,unit:"g",cat:"Meat"},
+        {id:"passata",name:"Passata",amount:140,unit:"ml",cat:"Pantry"},
+        {id:"onion",name:"Brown onion",amount:0.25,unit:"",cat:"Produce"},
+        {id:"garlic",name:"Garlic",amount:0.5,unit:"",cat:"Produce"},
+        {id:"carrot",name:"Carrot",amount:0.25,unit:"",cat:"Produce"},
+        {id:"parmesan",name:"Parmesan",amount:10,unit:"g",cat:"Dairy"}
+      ]},
+      {id:"chicken-tacos",name:"Chicken Tacos",emoji:"🌮",cookTime:"25 min",category:"Mexican",ingredients:[
+        {id:"chicken-breast",name:"Chicken breast",amount:120,unit:"g",cat:"Meat"},
+        {id:"taco-shells",name:"Taco shells",amount:2,unit:"",cat:"Pantry"},
+        {id:"lettuce",name:"Iceberg lettuce",amount:0.2,unit:"head",cat:"Produce"},
+        {id:"tomato",name:"Tomato",amount:0.5,unit:"",cat:"Produce"},
+        {id:"cheese-shred",name:"Shredded cheese",amount:20,unit:"g",cat:"Dairy"},
+        {id:"sour-cream",name:"Sour cream",amount:20,unit:"ml",cat:"Dairy"},
+        {id:"taco-seasoning",name:"Taco seasoning",amount:1,unit:"tsp",cat:"Pantry"},
+        {id:"avocado",name:"Avocado",amount:0.25,unit:"",cat:"Produce"}
+      ]},
+      {id:"roast-chicken",name:"Roast Chicken & Veggies",emoji:"🍗",cookTime:"1hr 20min",category:"Roast",ingredients:[
+        {id:"whole-chicken",name:"Whole chicken",amount:0.35,unit:"kg",cat:"Meat"},
+        {id:"potato",name:"Potatoes",amount:150,unit:"g",cat:"Produce"},
+        {id:"sweet-potato",name:"Sweet potato",amount:100,unit:"g",cat:"Produce"},
+        {id:"broccoli",name:"Broccoli",amount:80,unit:"g",cat:"Produce"},
+        {id:"carrot-r",name:"Carrot",amount:0.5,unit:"",cat:"Produce"},
+        {id:"olive-oil",name:"Olive oil",amount:2,unit:"tbsp",cat:"Pantry"},
+        {id:"mixed-herbs",name:"Mixed herbs",amount:1,unit:"tsp",cat:"Pantry"}
+      ]},
+      {id:"fried-rice",name:"Egg Fried Rice",emoji:"🍳",cookTime:"20 min",category:"Asian",ingredients:[
+        {id:"rice",name:"Jasmine rice",amount:80,unit:"g",cat:"Pantry"},
+        {id:"eggs",name:"Eggs",amount:1,unit:"",cat:"Dairy"},
+        {id:"frozen-peas",name:"Frozen peas & corn",amount:50,unit:"g",cat:"Frozen"},
+        {id:"soy-sauce",name:"Soy sauce",amount:1,unit:"tbsp",cat:"Pantry"},
+        {id:"sesame-oil",name:"Sesame oil",amount:0.5,unit:"tsp",cat:"Pantry"},
+        {id:"spring-onion",name:"Spring onion",amount:1,unit:"",cat:"Produce"}
+      ]},
+      {id:"fish-chips",name:"Fish & Chips",emoji:"🐟",cookTime:"30 min",category:"Seafood",ingredients:[
+        {id:"white-fish",name:"White fish fillets",amount:150,unit:"g",cat:"Seafood"},
+        {id:"potato-chips",name:"Potatoes",amount:200,unit:"g",cat:"Produce"},
+        {id:"flour",name:"Plain flour",amount:30,unit:"g",cat:"Pantry"},
+        {id:"breadcrumbs",name:"Breadcrumbs",amount:40,unit:"g",cat:"Pantry"},
+        {id:"egg-b",name:"Egg",amount:0.5,unit:"",cat:"Dairy"},
+        {id:"lemon",name:"Lemon",amount:0.25,unit:"",cat:"Produce"}
+      ]},
+      {id:"chicken-soup",name:"Chicken Noodle Soup",emoji:"🍜",cookTime:"40 min",category:"Soup",ingredients:[
+        {id:"chicken-thigh",name:"Chicken thighs",amount:120,unit:"g",cat:"Meat"},
+        {id:"egg-noodles",name:"Egg noodles",amount:60,unit:"g",cat:"Pantry"},
+        {id:"chkn-stock",name:"Chicken stock",amount:300,unit:"ml",cat:"Pantry"},
+        {id:"celery",name:"Celery",amount:0.5,unit:"stalk",cat:"Produce"},
+        {id:"carrot-s",name:"Carrot",amount:0.5,unit:"",cat:"Produce"},
+        {id:"onion-s",name:"Onion",amount:0.25,unit:"",cat:"Produce"}
+      ]},
+      {id:"pizza",name:"Homemade Pizza",emoji:"🍕",cookTime:"35 min",category:"Pizza",ingredients:[
+        {id:"pizza-base",name:"Pizza bases",amount:0.5,unit:"",cat:"Pantry"},
+        {id:"tomato-paste",name:"Tomato paste",amount:2,unit:"tbsp",cat:"Pantry"},
+        {id:"mozzarella",name:"Mozzarella",amount:50,unit:"g",cat:"Dairy"},
+        {id:"ham",name:"Ham",amount:30,unit:"g",cat:"Meat"},
+        {id:"mushrooms",name:"Mushrooms",amount:40,unit:"g",cat:"Produce"},
+        {id:"capsicum",name:"Capsicum",amount:0.25,unit:"",cat:"Produce"}
+      ]},
+      {id:"beef-stir-fry",name:"Beef Stir Fry",emoji:"🥩",cookTime:"25 min",category:"Asian",ingredients:[
+        {id:"beef-strips",name:"Beef strips",amount:120,unit:"g",cat:"Meat"},
+        {id:"stir-fry-veg",name:"Stir-fry veg",amount:100,unit:"g",cat:"Produce"},
+        {id:"hokkien-noodles",name:"Hokkien noodles",amount:80,unit:"g",cat:"Pantry"},
+        {id:"oyster-sauce",name:"Oyster sauce",amount:1,unit:"tbsp",cat:"Pantry"},
+        {id:"soy-sf",name:"Soy sauce",amount:1,unit:"tbsp",cat:"Pantry"},
+        {id:"garlic-sf",name:"Garlic",amount:0.5,unit:"cloves",cat:"Produce"},
+        {id:"ginger",name:"Fresh ginger",amount:0.5,unit:"tsp",cat:"Produce"}
+      ]},
+      {id:"lamb-chops",name:"Lamb Chops & Mash",emoji:"🫙",cookTime:"30 min",category:"Grill",ingredients:[
+        {id:"lamb-cutlets",name:"Lamb cutlets",amount:150,unit:"g",cat:"Meat"},
+        {id:"potato-m",name:"Potatoes (mash)",amount:180,unit:"g",cat:"Produce"},
+        {id:"butter",name:"Butter",amount:15,unit:"g",cat:"Dairy"},
+        {id:"milk-m",name:"Milk",amount:50,unit:"ml",cat:"Dairy"},
+        {id:"green-beans",name:"Green beans",amount:80,unit:"g",cat:"Produce"},
+        {id:"rosemary",name:"Rosemary",amount:1,unit:"sprig",cat:"Produce"}
+      ]},
+      {id:"pasta-bake",name:"Creamy Pasta Bake",emoji:"🧀",cookTime:"45 min",category:"Pasta",ingredients:[
+        {id:"penne",name:"Penne pasta",amount:80,unit:"g",cat:"Pantry"},
+        {id:"bacon",name:"Bacon",amount:40,unit:"g",cat:"Meat"},
+        {id:"cream",name:"Thickened cream",amount:60,unit:"ml",cat:"Dairy"},
+        {id:"cheddar",name:"Cheddar",amount:30,unit:"g",cat:"Dairy"},
+        {id:"spinach",name:"Baby spinach",amount:30,unit:"g",cat:"Produce"},
+        {id:"onion-b",name:"Onion",amount:0.25,unit:"",cat:"Produce"},
+        {id:"garlic-b",name:"Garlic",amount:0.5,unit:"cloves",cat:"Produce"}
+      ]}
+    ];
+
+    const CAT_ORDER = ["Produce","Meat","Seafood","Dairy","Frozen","Pantry"];
+    const CAT_COLORS = { Produce:"#3fc060", Meat:"#ff6b35", Seafood:"#38b6ff", Dairy:"#ffd166", Frozen:"#a78bfa", Pantry:"#8a8a8a" };
+
+    function initSchedule() {
+      const s = {};
+      DAYS.forEach((d, i) => {
+        if (i <= 3) s[d] = { adults:2, kids:[{id:1,age:5},{id:2,age:1}] };
+        else if (i <= 5) s[d] = { adults:1, kids:[{id:1,age:5},{id:2,age:1}] };
+        else s[d] = { adults:2, kids:[{id:1,age:5},{id:2,age:1}] };
+      });
+      return s;
+    }
+
+    function servMult(hh) {
+      let s = hh.adults;
+      (hh.kids||[]).forEach(k => { s += k.age<=1?0.25:k.age<=4?0.5:0.75; });
+      return Math.max(s, 0.5);
+    }
+
+    function fmtAmt(raw, unit) {
+      if (!raw || raw <= 0) return "";
+      let n = raw;
+      if (unit==="g"||unit==="ml") n = Math.round(raw/5)*5||5;
+      else if (unit==="") n = Math.ceil(raw*4)/4;
+      else n = Math.round(raw*4)/4||0.25;
+      return unit===""?`x${n}`:`${n} ${unit}`;
+    }
+
+    function hhSum(hh) {
+      const p = [];
+      if (hh.adults > 0) p.push(`${hh.adults} adult${hh.adults>1?"s":""}`);
+      if ((hh.kids||[]).length > 0) p.push(`${hh.kids.length} kid${hh.kids.length>1?"s":""}`);
+      return p.length ? p.join(" + ") : "Nobody home";
+    }
+
+    function App() {
+      const [step, setStep] = useState(0);
+      const [schedule, setSchedule] = useState(initSchedule);
+      const [mealPlan, setMealPlan] = useState({});
+      const [pickerDay, setPickerDay] = useState(null);
+      const [customDay, setCustomDay] = useState(null);
+      const [checked, setChecked] = useState({});
+      const [copied, setCopied] = useState(false);
+      const [newIng, setNewIng] = useState("");
+
+      const groceryList = useMemo(() => {
+        const map = {};
+        DAYS.forEach(day => {
+          const plan = mealPlan[day]; if (!plan) return;
+          const meal = MEALS.find(m => m.id===plan.mealId); if (!meal) return;
+          const mult = servMult(schedule[day]);
+          meal.ingredients.forEach(ing => {
+            if ((plan.removed||[]).includes(ing.id)) return;
+            const key = `${ing.name}|${ing.unit}|${ing.cat}`;
+            if (!map[key]) map[key] = { name:ing.name, unit:ing.unit, cat:ing.cat, total:0, days:[] };
+            map[key].total += ing.amount * mult;
+            map[key].days.push(DS[DAYS.indexOf(day)]);
+          });
+          (plan.added||[]).forEach(name => {
+            const key = `${name}|custom|Pantry`;
+            if (!map[key]) map[key] = { name, unit:"", cat:"Pantry", total:0, days:[], custom:true };
+            map[key].days.push(DS[DAYS.indexOf(day)]);
+          });
+        });
+        const byCat = {};
+        Object.values(map).forEach(item => {
+          if (!byCat[item.cat]) byCat[item.cat] = [];
+          byCat[item.cat].push(item);
+        });
+        return byCat;
+      }, [mealPlan, schedule]);
+
+      const totalItems = Object.values(groceryList).reduce((a,v) => a+v.length, 0);
+      const plannedDays = DAYS.filter(d => mealPlan[d]).length;
+      const customPlan = customDay ? mealPlan[customDay] : null;
+      const customMeal = customPlan ? MEALS.find(m => m.id===customPlan.mealId) : null;
+
+      const updAdults = (day, d) => setSchedule(s => ({...s,[day]:{...s[day],adults:Math.max(0,s[day].adults+d)}}));
+      const addKid = (day) => setSchedule(s => ({...s,[day]:{...s[day],kids:[...(s[day].kids||[]),{id:Date.now(),age:5}]}}));
+      const removeKid = (day, id) => setSchedule(s => ({...s,[day]:{...s[day],kids:s[day].kids.filter(k=>k.id!==id)}}));
+      const setKidAge = (day, id, age) => setSchedule(s => ({...s,[day]:{...s[day],kids:s[day].kids.map(k=>k.id===id?{...k,age:+age}:k)}}));
+      const pickMeal = (day, mealId) => { setMealPlan(p => ({...p,[day]:{mealId,removed:[],added:[]}})); setPickerDay(null); };
+      const clearMeal = (day) => setMealPlan(p => { const n={...p}; delete n[day]; return n; });
+      const toggleIng = (day, ingId) => setMealPlan(p => {
+        const plan = p[day];
+        const removed = (plan.removed||[]).includes(ingId) ? plan.removed.filter(i=>i!==ingId) : [...(plan.removed||[]),ingId];
+        return {...p,[day]:{...plan,removed}};
+      });
+      const addIng = (day) => {
+        if (!newIng.trim()) return;
+        setMealPlan(p => ({...p,[day]:{...p[day],added:[...(p[day].added||[]),newIng.trim()]}}));
+        setNewIng("");
+      };
+      const rmAdded = (day, name) => setMealPlan(p => ({...p,[day]:{...p[day],added:p[day].added.filter(a=>a!==name)}}));
+      const copyList = () => {
+        const lines = ["GROCERY LIST\n"];
+        CAT_ORDER.forEach(cat => {
+          const items = groceryList[cat]; if (!items?.length) return;
+          lines.push(`\n-- ${cat.toUpperCase()} --`);
+          items.forEach(item => { const amt = item.custom?"":fmtAmt(item.total,item.unit); lines.push(`- ${item.name}${amt?" — "+amt:""}`); });
+        });
+        navigator.clipboard.writeText(lines.join("\n"));
+        setCopied(true); setTimeout(()=>setCopied(false), 2500);
+      };
+
+      const ctrBtn = (label, onClick) => (
+        <button onClick={onClick} style={{width:28,height:28,borderRadius:"50%",border:"1px solid #333",background:"#242424",cursor:"pointer",fontSize:15,color:"#3fc060",fontWeight:700,fontFamily:"inherit",display:"inline-flex",alignItems:"center",justifyContent:"center"}}>{label}</button>
+      );
+
+      return (
+        <div style={{background:"#000",minHeight:"100vh"}}>
+
+          {/* TOPBAR */}
+          <div style={{background:"#000",padding:"16px 20px 0",position:"sticky",top:0,zIndex:10}}>
+            <div style={{display:"flex",alignItems:"center",gap:12,maxWidth:900,margin:"0 auto 14px"}}>
+              <div style={{fontSize:20,fontWeight:800,flex:1,letterSpacing:"-0.5px"}}>
+                dinner<span style={{color:"#3fc060"}}>plan</span>
+              </div>
+              <div style={{display:"flex",gap:6}}>
+                {["Household","Meals","Grocery"].map((label,i) => (
+                  <button key={i} onClick={()=>i<=step&&setStep(i)} style={{
+                    padding:"6px 14px",borderRadius:30,fontSize:12,fontWeight:800,border:"none",
+                    cursor:i<=step?"pointer":"default",fontFamily:"inherit",
+                    background:step===i?"#3fc060":step>i?"#242424":"#2e2e2e",
+                    color:step===i?"#000":step>i?"#fff":"#8a8a8a",
+                    outline:step>i?"1px solid #2a7a40":"none"
+                  }}>{label}</button>
+                ))}
+              </div>
+            </div>
+            <div style={{height:1,background:"#333"}}/>
+          </div>
+
+          <div style={{maxWidth:900,margin:"0 auto",padding:"20px 20px 40px"}}>
+
+            {/* STEP 0 */}
+            {step===0 && <>
+              <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>Who's home this week?</h1>
+              <p style={{color:"#8a8a8a",fontSize:13,marginBottom:18}}>Set your household per night — ingredients scale automatically</p>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:10}}>
+                {DAYS.map(day => {
+                  const hh = schedule[day];
+                  const isWe = day==="Saturday"||day==="Sunday";
+                  return (
+                    <div key={day} style={{background:"#1a1a1a",border:"1px solid #333",borderRadius:16,padding:14}}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                        <span style={{fontSize:14,fontWeight:800}}>{day}</span>
+                        {isWe && <span style={{fontSize:10,fontWeight:700,background:"#3fc060",color:"#000",padding:"2px 8px",borderRadius:20}}>Weekend</span>}
+                      </div>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                        <span style={{fontSize:12,fontWeight:600,color:"#8a8a8a"}}>Adults</span>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          {ctrBtn("−",()=>updAdults(day,-1))}
+                          <span style={{fontSize:15,fontWeight:700,minWidth:18,textAlign:"center"}}>{hh.adults}</span>
+                          {ctrBtn("+",()=>updAdults(day,1))}
+                        </div>
+                      </div>
+                      <div style={{borderTop:"1px solid #333",paddingTop:10}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+                          <span style={{fontSize:11,fontWeight:700,color:"#8a8a8a",textTransform:"uppercase",letterSpacing:".5px"}}>Children</span>
+                          <button onClick={()=>addKid(day)} style={{fontSize:11,fontWeight:700,color:"#3fc060",background:"none",border:"1px solid #2a7a40",borderRadius:20,padding:"3px 9px",cursor:"pointer",fontFamily:"inherit"}}>+ Add</button>
+                        </div>
+                        {(hh.kids||[]).length===0 && <div style={{fontSize:11,color:"#555"}}>No children</div>}
+                        {(hh.kids||[]).map(kid => (
+                          <div key={kid.id} style={{display:"flex",alignItems:"center",gap:6,marginBottom:5}}>
+                            <span style={{fontSize:15}}>{kid.age<=1?"👶":kid.age<=5?"🧒":"👦"}</span>
+                            <select value={kid.age} onChange={e=>setKidAge(day,kid.id,e.target.value)} style={{flex:1,fontSize:12,border:"1px solid #333",borderRadius:8,padding:"4px 7px",background:"#242424",color:"#fff",fontFamily:"inherit"}}>
+                              {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(a => (
+                                <option key={a} value={a} style={{background:"#242424"}}>{a===0?"Age 0 — infant":a===1?"Age 1 — toddler":`Age ${a}`}</option>
+                              ))}
+                            </select>
+                            <button onClick={()=>removeKid(day,kid.id)} style={{background:"none",border:"none",cursor:"pointer",color:"#555",fontSize:13,padding:"0 3px",fontFamily:"inherit"}}>✕</button>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{fontSize:11,fontWeight:700,color:"#3fc060",marginTop:10}}>
+                        {hhSum(hh)} · {servMult(hh).toFixed(1)} servings
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{display:"flex",justifyContent:"flex-end",marginTop:20}}>
+                <button onClick={()=>setStep(1)} style={{padding:"12px 28px",borderRadius:30,background:"#3fc060",color:"#000",border:"none",fontFamily:"inherit",fontWeight:800,fontSize:14,cursor:"pointer"}}>Plan Meals →</button>
+              </div>
+            </>}
+
+            {/* STEP 1 */}
+            {step===1 && <>
+              <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>This week's dinners</h1>
+              <p style={{color:"#8a8a8a",fontSize:13,marginBottom:18}}>Tap any night to add a meal, then customise ingredients</p>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:10}}>
+                {DAYS.map(day => {
+                  const plan = mealPlan[day];
+                  const meal = plan ? MEALS.find(m=>m.id===plan.mealId) : null;
+                  const hh = schedule[day];
+                  const hasCust = (plan?.removed?.length||0)+(plan?.added?.length||0)>0;
+                  return (
+                    <div key={day} onClick={!meal?()=>setPickerDay(day):undefined}
+                      style={{background:"#1a1a1a",border:`1px solid ${meal?"#2a7a40":"#333"}`,borderRadius:16,overflow:"hidden",cursor:meal?"default":"pointer"}}>
+                      <div style={{background:"#242424",height:90,display:"flex",alignItems:"center",justifyContent:"center",fontSize:meal?52:28,opacity:meal?1:0.3}}>
+                        {meal?meal.emoji:"+"}
+                      </div>
+                      <div style={{padding:12}}>
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                          <span style={{fontSize:13,fontWeight:800}}>{day}</span>
+                          <span style={{fontSize:11,fontWeight:600,color:"#8a8a8a",background:"#2e2e2e",padding:"2px 8px",borderRadius:20}}>{hhSum(hh)}</span>
+                        </div>
+                        {meal ? <>
+                          <div style={{fontSize:15,fontWeight:800,marginBottom:2}}>{meal.name}</div>
+                          <div style={{fontSize:11,color:"#8a8a8a",marginBottom:hasCust?4:8}}>{meal.cookTime} · {meal.category}</div>
+                          {hasCust && <div style={{fontSize:11,fontWeight:700,color:"#3fc060",marginBottom:8}}>Customised</div>}
+                          <div style={{display:"flex",gap:6}}>
+                            <button onClick={()=>setPickerDay(day)} style={{fontSize:11,fontWeight:700,padding:"5px 12px",borderRadius:20,background:"#2e2e2e",color:"#e8e8e8",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Change</button>
+                            <button onClick={()=>setCustomDay(day)} style={{fontSize:11,fontWeight:700,padding:"5px 12px",borderRadius:20,background:"#3fc060",color:"#000",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Ingredients</button>
+                            <button onClick={()=>clearMeal(day)} style={{fontSize:11,fontWeight:700,padding:"5px 12px",borderRadius:20,background:"transparent",color:"#8a8a8a",border:"1px solid #333",cursor:"pointer",fontFamily:"inherit"}}>✕</button>
+                          </div>
+                        </> : <>
+                          <div style={{fontSize:13,color:"#8a8a8a",fontWeight:600,margin:"4px 0 10px"}}>Tap to choose a meal</div>
+                          <button onClick={()=>setPickerDay(day)} style={{width:"100%",padding:9,background:"#2e2e2e",border:"none",borderRadius:10,cursor:"pointer",fontSize:13,fontWeight:700,color:"#3fc060",fontFamily:"inherit"}}>+ Add dinner</button>
+                        </>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginTop:20}}>
+                <button onClick={()=>setStep(0)} style={{padding:"12px 24px",borderRadius:30,background:"#1a1a1a",border:"1px solid #333",color:"#e8e8e8",fontFamily:"inherit",fontWeight:800,fontSize:13,cursor:"pointer"}}>← Back</button>
+                <button onClick={()=>setStep(2)} style={{padding:"12px 28px",borderRadius:30,background:"#3fc060",color:"#000",border:"none",fontFamily:"inherit",fontWeight:800,fontSize:14,cursor:"pointer"}}>Build Grocery List →</button>
+              </div>
+            </>}
+
+            {/* STEP 2 */}
+            {step===2 && <>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8,marginBottom:18}}>
+                <div>
+                  <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>Grocery List</h1>
+                  <p style={{color:"#8a8a8a",fontSize:13}}>{totalItems} items · {plannedDays} dinners planned · Tick off what you have</p>
+                </div>
+                {totalItems>0 && (
+                  <button onClick={copyList} style={{padding:"10px 20px",background:copied?"#2e2e2e":"#3fc060",color:copied?"#3fc060":"#000",border:"none",borderRadius:30,cursor:"pointer",fontFamily:"inherit",fontWeight:800,fontSize:13}}>
+                    {copied?"Copied!":"Copy List"}
+                  </button>
+                )}
+              </div>
+              {totalItems===0 && <div style={{textAlign:"center",padding:"40px 20px",color:"#8a8a8a",fontSize:13}}>No meals planned yet — go back and add some dinners first</div>}
+              {CAT_ORDER.filter(cat=>groceryList[cat]?.length>0).map(cat => (
+                <div key={cat} style={{marginBottom:20}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,paddingBottom:8,borderBottom:"1px solid #333"}}>
+                    <div style={{width:8,height:8,borderRadius:"50%",background:CAT_COLORS[cat]||"#888",flexShrink:0}}/>
+                    <span style={{fontSize:15,fontWeight:800}}>{cat}</span>
+                    <span style={{fontSize:12,color:"#8a8a8a"}}>{groceryList[cat].length} item{groceryList[cat].length>1?"s":""}</span>
+                  </div>
+                  {groceryList[cat].map((item,i) => {
+                    const isc = !!checked[item.name];
+                    return (
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",borderRadius:12,background:isc?"transparent":"#1a1a1a",border:"1px solid #333",marginBottom:6,opacity:isc?0.4:1,textDecoration:isc?"line-through":"none"}}>
+                        <input type="checkbox" checked={isc} onChange={()=>setChecked(c=>({...c,[item.name]:!c[item.name]}))} style={{width:18,height:18,cursor:"pointer",accentColor:"#3fc060",flexShrink:0}}/>
+                        <span style={{flex:1,fontSize:13,fontWeight:700}}>{item.name}</span>
+                        {!item.custom && <span style={{fontSize:12,fontWeight:600,color:"#3fc060",whiteSpace:"nowrap"}}>{fmtAmt(item.total,item.unit)}</span>}
+                        <span style={{fontSize:11,color:"#8a8a8a",marginLeft:6,whiteSpace:"nowrap"}}>{item.days.join(", ")}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+              <div style={{marginTop:20}}>
+                <button onClick={()=>setStep(1)} style={{padding:"12px 24px",borderRadius:30,background:"#1a1a1a",border:"1px solid #333",color:"#e8e8e8",fontFamily:"inherit",fontWeight:800,fontSize:13,cursor:"pointer"}}>← Back to Meals</button>
+              </div>
+            </>}
+          </div>
+
+          {/* MEAL PICKER */}
+          {pickerDay && (
+            <div onClick={()=>setPickerDay(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:100}}>
+              <div onClick={e=>e.stopPropagation()} style={{background:"#1a1a1a",width:"100%",maxWidth:900,maxHeight:"88vh",borderRadius:"20px 20px 0 0",overflow:"hidden",display:"flex",flexDirection:"column",border:"1px solid #333"}}>
+                <div style={{width:36,height:4,background:"#333",borderRadius:2,margin:"10px auto 0"}}/>
+                <div style={{padding:"14px 20px 12px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid #333",flexShrink:0}}>
+                  <span style={{fontSize:17,fontWeight:800}}>Choose dinner — {pickerDay}</span>
+                  <button onClick={()=>setPickerDay(null)} style={{background:"#2e2e2e",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",fontSize:16,color:"#8a8a8a",fontFamily:"inherit"}}>✕</button>
+                </div>
+                <div style={{padding:"16px 20px",overflowY:"auto",flex:1}}>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:8}}>
+                    {MEALS.map(meal => (
+                      <div key={meal.id} onClick={()=>pickMeal(pickerDay,meal.id)}
+                        style={{border:`1px solid ${mealPlan[pickerDay]?.mealId===meal.id?"#3fc060":"#333"}`,borderRadius:14,padding:12,cursor:"pointer",background:mealPlan[pickerDay]?.mealId===meal.id?"rgba(63,192,96,.08)":"#242424"}}>
+                        <div style={{fontSize:28,marginBottom:6}}>{meal.emoji}</div>
+                        <div style={{fontSize:13,fontWeight:800}}>{meal.name}</div>
+                        <div style={{fontSize:11,color:"#8a8a8a",marginTop:2}}>{meal.cookTime} · {meal.category}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* INGREDIENT CUSTOMISER */}
+          {customDay && customMeal && (
+            <div onClick={()=>{setCustomDay(null);setNewIng("");}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:100}}>
+              <div onClick={e=>e.stopPropagation()} style={{background:"#1a1a1a",width:"100%",maxWidth:500,maxHeight:"88vh",borderRadius:"20px 20px 0 0",overflow:"hidden",display:"flex",flexDirection:"column",border:"1px solid #333"}}>
+                <div style={{width:36,height:4,background:"#333",borderRadius:2,margin:"10px auto 0"}}/>
+                <div style={{padding:"14px 20px 12px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid #333",flexShrink:0}}>
+                  <span style={{fontSize:17,fontWeight:800}}>{customMeal.emoji} {customMeal.name}</span>
+                  <button onClick={()=>{setCustomDay(null);setNewIng("");}} style={{background:"#2e2e2e",border:"none",width:30,height:30,borderRadius:"50%",cursor:"pointer",fontSize:16,color:"#8a8a8a",fontFamily:"inherit"}}>✕</button>
+                </div>
+                <div style={{padding:"16px 20px",overflowY:"auto",flex:1}}>
+                  <div style={{fontSize:12,fontWeight:600,color:"#8a8a8a",marginBottom:10}}>
+                    Scaled for {hhSum(schedule[customDay])} · Untick to remove
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:12}}>
+                    {customMeal.ingredients.map(ing => {
+                      const isRmv = (customPlan.removed||[]).includes(ing.id);
+                      const mult = servMult(schedule[customDay]);
+                      return (
+                        <div key={ing.id} style={{display:"flex",alignItems:"center",gap:9,padding:"9px 12px",borderRadius:12,background:"#242424",border:"1px solid #333",opacity:isRmv?0.35:1,textDecoration:isRmv?"line-through":"none"}}>
+                          <input type="checkbox" checked={!isRmv} onChange={()=>toggleIng(customDay,ing.id)} style={{width:17,height:17,cursor:"pointer",accentColor:"#3fc060",flexShrink:0}}/>
+                          <span style={{flex:1,fontSize:13,fontWeight:600}}>{ing.name}</span>
+                          <span style={{fontSize:12,color:"#3fc060",fontWeight:700}}>{fmtAmt(ing.amount*mult,ing.unit)}</span>
+                        </div>
+                      );
+                    })}
+                    {(customPlan.added||[]).map(name => (
+                      <div key={name} style={{display:"flex",alignItems:"center",gap:7,background:"rgba(63,192,96,.1)",border:"1px solid #2a7a40",borderRadius:12,padding:"8px 12px",fontSize:12,fontWeight:700,color:"#3fc060"}}>
+                        <span>+ {name}</span>
+                        <button onClick={()=>rmAdded(customDay,name)} style={{background:"none",border:"none",cursor:"pointer",color:"#555",fontSize:13,marginLeft:"auto",fontFamily:"inherit"}}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{fontSize:12,fontWeight:700,color:"#8a8a8a",marginBottom:7}}>Add an ingredient</div>
+                  <div style={{display:"flex",gap:7}}>
+                    <input value={newIng} onChange={e=>setNewIng(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addIng(customDay)}
+                      placeholder="e.g. chilli flakes, extra garlic…"
+                      style={{flex:1,padding:"9px 13px",border:"1px solid #333",borderRadius:12,fontSize:13,fontFamily:"inherit",background:"#242424",color:"#fff"}}/>
+                    <button onClick={()=>addIng(customDay)} style={{padding:"9px 16px",borderRadius:12,background:"#3fc060",color:"#000",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:800,fontSize:13}}>Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
 </html>
