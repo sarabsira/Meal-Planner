@@ -22,92 +22,96 @@
     const DS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
     const MEALS = [
-      {id:"spag-bol",name:"Spaghetti Bolognese",emoji:"🍝",cookTime:"35 min",category:"Pasta",ingredients:[
-        {id:"spaghetti",name:"Spaghetti",amount:80,unit:"g",cat:"Pantry"},
-        {id:"beef-mince",name:"Beef mince",amount:100,unit:"g",cat:"Meat"},
-        {id:"passata",name:"Passata",amount:140,unit:"ml",cat:"Pantry"},
-        {id:"onion",name:"Brown onion",amount:0.25,unit:"",cat:"Produce"},
-        {id:"garlic",name:"Garlic",amount:0.5,unit:"",cat:"Produce"},
-        {id:"carrot",name:"Carrot",amount:0.25,unit:"",cat:"Produce"},
-        {id:"parmesan",name:"Parmesan",amount:10,unit:"g",cat:"Dairy"}
-      ]},
-      {id:"chicken-tacos",name:"Chicken Tacos",emoji:"🌮",cookTime:"25 min",category:"Mexican",ingredients:[
-        {id:"chicken-breast",name:"Chicken breast",amount:120,unit:"g",cat:"Meat"},
-        {id:"taco-shells",name:"Taco shells",amount:2,unit:"",cat:"Pantry"},
-        {id:"lettuce",name:"Iceberg lettuce",amount:0.2,unit:"head",cat:"Produce"},
-        {id:"tomato",name:"Tomato",amount:0.5,unit:"",cat:"Produce"},
-        {id:"cheese-shred",name:"Shredded cheese",amount:20,unit:"g",cat:"Dairy"},
-        {id:"sour-cream",name:"Sour cream",amount:20,unit:"ml",cat:"Dairy"},
-        {id:"taco-seasoning",name:"Taco seasoning",amount:1,unit:"tsp",cat:"Pantry"},
-        {id:"avocado",name:"Avocado",amount:0.25,unit:"",cat:"Produce"}
-      ]},
-      {id:"roast-chicken",name:"Roast Chicken & Veggies",emoji:"🍗",cookTime:"1hr 20min",category:"Roast",ingredients:[
-        {id:"whole-chicken",name:"Whole chicken",amount:0.35,unit:"kg",cat:"Meat"},
-        {id:"potato",name:"Potatoes",amount:150,unit:"g",cat:"Produce"},
-        {id:"sweet-potato",name:"Sweet potato",amount:100,unit:"g",cat:"Produce"},
-        {id:"broccoli",name:"Broccoli",amount:80,unit:"g",cat:"Produce"},
-        {id:"carrot-r",name:"Carrot",amount:0.5,unit:"",cat:"Produce"},
-        {id:"olive-oil",name:"Olive oil",amount:2,unit:"tbsp",cat:"Pantry"},
-        {id:"mixed-herbs",name:"Mixed herbs",amount:1,unit:"tsp",cat:"Pantry"}
-      ]},
-      {id:"fried-rice",name:"Egg Fried Rice",emoji:"🍳",cookTime:"20 min",category:"Asian",ingredients:[
-        {id:"rice",name:"Jasmine rice",amount:80,unit:"g",cat:"Pantry"},
-        {id:"eggs",name:"Eggs",amount:1,unit:"",cat:"Dairy"},
-        {id:"frozen-peas",name:"Frozen peas & corn",amount:50,unit:"g",cat:"Frozen"},
-        {id:"soy-sauce",name:"Soy sauce",amount:1,unit:"tbsp",cat:"Pantry"},
-        {id:"sesame-oil",name:"Sesame oil",amount:0.5,unit:"tsp",cat:"Pantry"},
-        {id:"spring-onion",name:"Spring onion",amount:1,unit:"",cat:"Produce"}
-      ]},
-      {id:"fish-chips",name:"Fish & Chips",emoji:"🐟",cookTime:"30 min",category:"Seafood",ingredients:[
-        {id:"white-fish",name:"White fish fillets",amount:150,unit:"g",cat:"Seafood"},
-        {id:"potato-chips",name:"Potatoes",amount:200,unit:"g",cat:"Produce"},
-        {id:"flour",name:"Plain flour",amount:30,unit:"g",cat:"Pantry"},
-        {id:"breadcrumbs",name:"Breadcrumbs",amount:40,unit:"g",cat:"Pantry"},
-        {id:"egg-b",name:"Egg",amount:0.5,unit:"",cat:"Dairy"},
-        {id:"lemon",name:"Lemon",amount:0.25,unit:"",cat:"Produce"}
-      ]},
-      {id:"chicken-soup",name:"Chicken Noodle Soup",emoji:"🍜",cookTime:"40 min",category:"Soup",ingredients:[
-        {id:"chicken-thigh",name:"Chicken thighs",amount:120,unit:"g",cat:"Meat"},
-        {id:"egg-noodles",name:"Egg noodles",amount:60,unit:"g",cat:"Pantry"},
-        {id:"chkn-stock",name:"Chicken stock",amount:300,unit:"ml",cat:"Pantry"},
-        {id:"celery",name:"Celery",amount:0.5,unit:"stalk",cat:"Produce"},
-        {id:"carrot-s",name:"Carrot",amount:0.5,unit:"",cat:"Produce"},
-        {id:"onion-s",name:"Onion",amount:0.25,unit:"",cat:"Produce"}
-      ]},
-      {id:"pizza",name:"Homemade Pizza",emoji:"🍕",cookTime:"35 min",category:"Pizza",ingredients:[
-        {id:"pizza-base",name:"Pizza bases",amount:0.5,unit:"",cat:"Pantry"},
-        {id:"tomato-paste",name:"Tomato paste",amount:2,unit:"tbsp",cat:"Pantry"},
-        {id:"mozzarella",name:"Mozzarella",amount:50,unit:"g",cat:"Dairy"},
-        {id:"ham",name:"Ham",amount:30,unit:"g",cat:"Meat"},
-        {id:"mushrooms",name:"Mushrooms",amount:40,unit:"g",cat:"Produce"},
-        {id:"capsicum",name:"Capsicum",amount:0.25,unit:"",cat:"Produce"}
-      ]},
-      {id:"beef-stir-fry",name:"Beef Stir Fry",emoji:"🥩",cookTime:"25 min",category:"Asian",ingredients:[
-        {id:"beef-strips",name:"Beef strips",amount:120,unit:"g",cat:"Meat"},
-        {id:"stir-fry-veg",name:"Stir-fry veg",amount:100,unit:"g",cat:"Produce"},
-        {id:"hokkien-noodles",name:"Hokkien noodles",amount:80,unit:"g",cat:"Pantry"},
-        {id:"oyster-sauce",name:"Oyster sauce",amount:1,unit:"tbsp",cat:"Pantry"},
-        {id:"soy-sf",name:"Soy sauce",amount:1,unit:"tbsp",cat:"Pantry"},
-        {id:"garlic-sf",name:"Garlic",amount:0.5,unit:"cloves",cat:"Produce"},
-        {id:"ginger",name:"Fresh ginger",amount:0.5,unit:"tsp",cat:"Produce"}
-      ]},
-      {id:"lamb-chops",name:"Lamb Chops & Mash",emoji:"🫙",cookTime:"30 min",category:"Grill",ingredients:[
-        {id:"lamb-cutlets",name:"Lamb cutlets",amount:150,unit:"g",cat:"Meat"},
-        {id:"potato-m",name:"Potatoes (mash)",amount:180,unit:"g",cat:"Produce"},
-        {id:"butter",name:"Butter",amount:15,unit:"g",cat:"Dairy"},
-        {id:"milk-m",name:"Milk",amount:50,unit:"ml",cat:"Dairy"},
-        {id:"green-beans",name:"Green beans",amount:80,unit:"g",cat:"Produce"},
-        {id:"rosemary",name:"Rosemary",amount:1,unit:"sprig",cat:"Produce"}
-      ]},
-      {id:"pasta-bake",name:"Creamy Pasta Bake",emoji:"🧀",cookTime:"45 min",category:"Pasta",ingredients:[
-        {id:"penne",name:"Penne pasta",amount:80,unit:"g",cat:"Pantry"},
-        {id:"bacon",name:"Bacon",amount:40,unit:"g",cat:"Meat"},
-        {id:"cream",name:"Thickened cream",amount:60,unit:"ml",cat:"Dairy"},
-        {id:"cheddar",name:"Cheddar",amount:30,unit:"g",cat:"Dairy"},
-        {id:"spinach",name:"Baby spinach",amount:30,unit:"g",cat:"Produce"},
-        {id:"onion-b",name:"Onion",amount:0.25,unit:"",cat:"Produce"},
-        {id:"garlic-b",name:"Garlic",amount:0.5,unit:"cloves",cat:"Produce"}
-      ]}
+      {
+        id:"ravioli-pasta",
+        name:"Ravioli Pasta",
+        emoji:"🍝",
+        cookTime:"25 min",
+        category:"Pasta",
+        ingredients:[
+          {id:"fresh-ravioli",name:"Fresh ravioli",amount:125,unit:"g",cat:"Pantry"},
+          {id:"mutti-tomato-r",name:"Mutti diced tomato can",amount:0.5,unit:"can",cat:"Pantry"},
+          {id:"cream-r",name:"Cream",amount:60,unit:"ml",cat:"Dairy"},
+          {id:"broccoli-r",name:"Broccoli",amount:80,unit:"g",cat:"Produce"},
+          {id:"mushroom-r",name:"Mushrooms",amount:60,unit:"g",cat:"Produce"},
+        ]
+      },
+      {
+        id:"steak",
+        name:"Steak",
+        emoji:"🥩",
+        cookTime:"30 min",
+        category:"Grill",
+        ingredients:[
+          {id:"scotch-fillet",name:"Scotch fillet steak",amount:200,unit:"g",cat:"Meat"},
+          {id:"potatoes-s",name:"Potatoes",amount:180,unit:"g",cat:"Produce"},
+          {id:"mushroom-s",name:"Mushrooms",amount:80,unit:"g",cat:"Produce"},
+          {id:"cream-s",name:"Cream",amount:60,unit:"ml",cat:"Dairy"},
+        ]
+      },
+      {
+        id:"fried-rice",
+        name:"Fried Rice",
+        emoji:"🍳",
+        cookTime:"25 min",
+        category:"Asian",
+        ingredients:[
+          {id:"rice-fr",name:"Rice",amount:80,unit:"g",cat:"Pantry"},
+          {id:"chicken-fr",name:"Chicken breast",amount:100,unit:"g",cat:"Meat"},
+          {id:"prawns-fr",name:"Raw prawns",amount:80,unit:"g",cat:"Seafood"},
+          {id:"eggs-fr",name:"Eggs",amount:1,unit:"",cat:"Dairy"},
+          {id:"broccoli-fr",name:"Broccoli",amount:60,unit:"g",cat:"Produce"},
+          {id:"capsicum-fr",name:"Capsicum",amount:0.5,unit:"",cat:"Produce"},
+          {id:"carrots-fr",name:"Carrots",amount:0.5,unit:"",cat:"Produce"},
+          {id:"maggi-fr",name:"Maggi fried rice powder mix",amount:0.5,unit:"sachet",cat:"Pantry"},
+        ]
+      },
+      {
+        id:"pizza",
+        name:"Homemade Pizza",
+        emoji:"🍕",
+        cookTime:"30 min",
+        category:"Pizza",
+        ingredients:[
+          {id:"pizza-bases",name:"Pizza bases (2-3 pack)",amount:0.5,unit:"pack",cat:"Pantry"},
+          {id:"mutti-tomato-p",name:"Mutti diced tomato can",amount:0.5,unit:"can",cat:"Pantry"},
+          {id:"tomato-paste-p",name:"Tomato paste",amount:1,unit:"tbsp",cat:"Pantry"},
+          {id:"mushroom-p",name:"Mushrooms",amount:50,unit:"g",cat:"Produce"},
+          {id:"salami-p",name:"Salami",amount:30,unit:"g",cat:"Meat"},
+          {id:"chicken-p",name:"Chicken breast",amount:80,unit:"g",cat:"Meat"},
+        ]
+      },
+      {
+        id:"goat-curry",
+        name:"Goat Curry",
+        emoji:"🍛",
+        cookTime:"1hr 30min",
+        category:"Curry",
+        ingredients:[
+          {id:"goat-meat",name:"Goat meat",amount:180,unit:"g",cat:"Meat"},
+          {id:"chopped-tom-g",name:"Chopped tomatoes",amount:0.5,unit:"can",cat:"Pantry"},
+          {id:"onion-g",name:"Onion",amount:0.5,unit:"",cat:"Produce"},
+          {id:"garlic-g",name:"Garlic",amount:1,unit:"clove",cat:"Produce"},
+          {id:"coriander-g",name:"Fresh coriander",amount:0.25,unit:"bunch",cat:"Produce"},
+          {id:"curry-powder-g",name:"Curry powder",amount:1,unit:"tbsp",cat:"Pantry"},
+        ]
+      },
+      {
+        id:"chicken-curry",
+        name:"Chicken Curry",
+        emoji:"🍲",
+        cookTime:"45 min",
+        category:"Curry",
+        ingredients:[
+          {id:"chicken-thigh",name:"Chicken thighs / drumsticks",amount:180,unit:"g",cat:"Meat"},
+          {id:"chopped-tom-c",name:"Chopped tomato can",amount:0.5,unit:"can",cat:"Pantry"},
+          {id:"cream-c",name:"Cream",amount:60,unit:"ml",cat:"Dairy"},
+          {id:"onion-c",name:"Onion",amount:0.5,unit:"",cat:"Produce"},
+          {id:"garlic-c",name:"Garlic",amount:1,unit:"clove",cat:"Produce"},
+          {id:"coriander-c",name:"Fresh coriander",amount:0.25,unit:"bunch",cat:"Produce"},
+          {id:"curry-powder-c",name:"Curry powder",amount:1,unit:"tbsp",cat:"Pantry"},
+        ]
+      },
     ];
 
     const CAT_ORDER = ["Produce","Meat","Seafood","Dairy","Frozen","Pantry"];
@@ -204,15 +208,26 @@
         setNewIng("");
       };
       const rmAdded = (day, name) => setMealPlan(p => ({...p,[day]:{...p[day],added:p[day].added.filter(a=>a!==name)}}));
-      const copyList = () => {
+
+      const buildText = () => {
         const lines = ["GROCERY LIST\n"];
         CAT_ORDER.forEach(cat => {
           const items = groceryList[cat]; if (!items?.length) return;
           lines.push(`\n-- ${cat.toUpperCase()} --`);
           items.forEach(item => { const amt = item.custom?"":fmtAmt(item.total,item.unit); lines.push(`- ${item.name}${amt?" — "+amt:""}`); });
         });
-        navigator.clipboard.writeText(lines.join("\n"));
+        return lines.join("\n");
+      };
+
+      const copyList = () => {
+        navigator.clipboard.writeText(buildText());
         setCopied(true); setTimeout(()=>setCopied(false), 2500);
+      };
+
+      const openGrocer = () => {
+        navigator.clipboard.writeText(buildText());
+        window.open("https://grocer.nz", "_blank");
+        setCopied(true); setTimeout(()=>setCopied(false), 3000);
       };
 
       const ctrBtn = (label, onClick) => (
@@ -245,7 +260,7 @@
 
           <div style={{maxWidth:900,margin:"0 auto",padding:"20px 20px 40px"}}>
 
-            {/* STEP 0 */}
+            {/* STEP 0 — HOUSEHOLD */}
             {step===0 && <>
               <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>Who's home this week?</h1>
               <p style={{color:"#8a8a8a",fontSize:13,marginBottom:18}}>Set your household per night — ingredients scale automatically</p>
@@ -297,7 +312,7 @@
               </div>
             </>}
 
-            {/* STEP 1 */}
+            {/* STEP 1 — MEALS */}
             {step===1 && <>
               <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>This week's dinners</h1>
               <p style={{color:"#8a8a8a",fontSize:13,marginBottom:18}}>Tap any night to add a meal, then customise ingredients</p>
@@ -342,20 +357,37 @@
               </div>
             </>}
 
-            {/* STEP 2 */}
+            {/* STEP 2 — GROCERY */}
             {step===2 && <>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8,marginBottom:18}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8,marginBottom:16}}>
                 <div>
                   <h1 style={{fontSize:24,fontWeight:800,letterSpacing:"-0.5px",marginBottom:4}}>Grocery List</h1>
                   <p style={{color:"#8a8a8a",fontSize:13}}>{totalItems} items · {plannedDays} dinners planned · Tick off what you have</p>
                 </div>
                 {totalItems>0 && (
-                  <button onClick={copyList} style={{padding:"10px 20px",background:copied?"#2e2e2e":"#3fc060",color:copied?"#3fc060":"#000",border:"none",borderRadius:30,cursor:"pointer",fontFamily:"inherit",fontWeight:800,fontSize:13}}>
-                    {copied?"Copied!":"Copy List"}
-                  </button>
+                  <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                    <button onClick={copyList} style={{padding:"10px 18px",background:"#242424",color:"#e8e8e8",border:"1px solid #333",borderRadius:30,cursor:"pointer",fontFamily:"inherit",fontWeight:800,fontSize:12}}>
+                      Copy List
+                    </button>
+                    <button onClick={openGrocer} style={{padding:"10px 18px",background:"#3fc060",color:"#000",border:"none",borderRadius:30,cursor:"pointer",fontFamily:"inherit",fontWeight:800,fontSize:12,display:"flex",alignItems:"center",gap:5}}>
+                      🛒 Search on Grocer.nz
+                    </button>
+                  </div>
                 )}
               </div>
-              {totalItems===0 && <div style={{textAlign:"center",padding:"40px 20px",color:"#8a8a8a",fontSize:13}}>No meals planned yet — go back and add some dinners first</div>}
+
+              {copied && (
+                <div style={{background:"rgba(63,192,96,0.1)",border:"1px solid #2a7a40",borderRadius:12,padding:"10px 14px",marginBottom:14,fontSize:12,color:"#3fc060",fontWeight:600}}>
+                  ✓ List copied to clipboard — paste it in Grocer's notes or search box for reference
+                </div>
+              )}
+
+              {totalItems===0 && (
+                <div style={{textAlign:"center",padding:"40px 20px",color:"#8a8a8a",fontSize:13}}>
+                  No meals planned yet — go back and add some dinners first
+                </div>
+              )}
+
               {CAT_ORDER.filter(cat=>groceryList[cat]?.length>0).map(cat => (
                 <div key={cat} style={{marginBottom:20}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,paddingBottom:8,borderBottom:"1px solid #333"}}>
@@ -376,13 +408,14 @@
                   })}
                 </div>
               ))}
+
               <div style={{marginTop:20}}>
                 <button onClick={()=>setStep(1)} style={{padding:"12px 24px",borderRadius:30,background:"#1a1a1a",border:"1px solid #333",color:"#e8e8e8",fontFamily:"inherit",fontWeight:800,fontSize:13,cursor:"pointer"}}>← Back to Meals</button>
               </div>
             </>}
           </div>
 
-          {/* MEAL PICKER */}
+          {/* MEAL PICKER SHEET */}
           {pickerDay && (
             <div onClick={()=>setPickerDay(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:100}}>
               <div onClick={e=>e.stopPropagation()} style={{background:"#1a1a1a",width:"100%",maxWidth:900,maxHeight:"88vh",borderRadius:"20px 20px 0 0",overflow:"hidden",display:"flex",flexDirection:"column",border:"1px solid #333"}}>
@@ -407,7 +440,7 @@
             </div>
           )}
 
-          {/* INGREDIENT CUSTOMISER */}
+          {/* INGREDIENT CUSTOMISER SHEET */}
           {customDay && customMeal && (
             <div onClick={()=>{setCustomDay(null);setNewIng("");}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:100}}>
               <div onClick={e=>e.stopPropagation()} style={{background:"#1a1a1a",width:"100%",maxWidth:500,maxHeight:"88vh",borderRadius:"20px 20px 0 0",overflow:"hidden",display:"flex",flexDirection:"column",border:"1px solid #333"}}>
